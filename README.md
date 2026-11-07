@@ -116,3 +116,13 @@ frontend/vercel.json Vercel frontend build configuration
 ## Current limits
 
 Prompt-injection checks and mode-specific evidence reduce risk; they are not a proof against every adversarial prompt or model error. There is no untrusted-code execution, password-reset email, social login, refresh-token rotation, or multi-instance distributed rate limiter. JWTs expire after 8 hours by default; signing out removes the browser's session token. Tokens use session storage, so keep the application's XSS protections intact. Schema initialization uses `create_all`; future production schema changes should use versioned migrations. Source implementations should be tested before being used as authoritative solutions.
+
+## Live deployment
+
+- Frontend: https://pattern-dsa-tutor.vercel.app (Vercel, source root `frontend`).
+- API: https://pattern-dsa-hp5p.onrender.com (Render, Python web service).
+- Database: Render Postgres 17 with pgvector, private network access only, in the Folio Assignment workspace.
+
+The API starts immediately. `AUTO_INDEX=true` builds the semantic index in the background. One problem embedding is shared by its Hint, Explanation, and Solution passages, reducing initial API use from 1,168 to 389 vectors. Embedding 2 query/document prefixes are used, and vectors from different models are never compared. Until indexing completes, or if query embedding quota is exhausted, retrieval explicitly reports `lexical`; the tutor remains usable with source-grounded Gemini responses. `/api/health` exposes the current index state.
+
+The Vercel production API URL is saved as a public configuration value. Gemini and signing keys stay on the backend. Both projects are connected to this GitHub repository. The free database expires on December 7, 2026.

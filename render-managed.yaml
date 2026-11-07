@@ -26,10 +26,7 @@ services:
       - key: GEMINI_API_KEY
         sync: false
       - key: CORS_ORIGINS
-        fromService:
-          type: web
-          name: pattern-dsa
-          envVarKey: RENDER_EXTERNAL_URL
+        value: https://pattern-dsa-tutor.vercel.app,https://pattern-dsa-hp5p.onrender.com
       - key: GEMINI_MODEL
         value: gemini-2.5-flash
       - key: EMBEDDING_MODEL

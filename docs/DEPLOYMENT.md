@@ -27,7 +27,7 @@ Use the supplied `render.yaml`, or create one Python web service with:
 
 ```text
 Build: pip install -r backend/requirements.lock
-Start: cd backend && python -m app.index && uvicorn app.main:app --host 0.0.0.0 --port $PORT
+Start: cd backend && uvicorn app.main:app --host 0.0.0.0 --port $PORT
 Health check: /api/health
 Region: Singapore
 Plan: Free (subject to account availability; it sleeps when idle)
@@ -41,7 +41,7 @@ Set these environment variables through Render's secret settings:
 - `CORS_ORIGINS`: the exact Vercel production HTTPS origin. Multiple approved origins can be comma-separated; no wildcard is allowed in production.
 - `ENVIRONMENT=production`.
 - `GEMINI_MODEL=gemini-2.5-flash` (configurable; check your account's model availability).
-- `EMBEDDING_MODEL=gemini-embedding-001`.
+- `EMBEDDING_MODEL=gemini-embedding-2`.
 - `PYTHON_VERSION=3.11.11`.
 
 For an initial large index, run `python -m app.index` from a trusted local environment against Neon **before** deploying. The start command is resumable and subsequently skips current indexed passages. Quota limits can make the first embedding pass take several minutes; doing it before deployment keeps readiness quick. Do not run multiple initial indexers at once.
