@@ -1,0 +1,18 @@
+services:
+  db:
+    image: pgvector/pgvector:pg17
+    environment:
+      POSTGRES_USER: pattern
+      POSTGRES_PASSWORD: local-development-only
+      POSTGRES_DB: pattern
+    ports:
+      - "127.0.0.1:5432:5432"
+    volumes:
+      - pattern-db:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U pattern -d pattern"]
+      interval: 5s
+      timeout: 3s
+      retries: 10
+volumes:
+  pattern-db:

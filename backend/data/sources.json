@@ -1,0 +1,13 @@
+{
+  "repository": "https://github.com/Kartavya728/Data-Structure-and-Algorithms-Sheet",
+  "commit": "1ef6eec5cb6a103246ce2f54fe0977b6dd9ff2c8",
+  "license": "MIT",
+  "copyright": "Copyright (c) 2025 Kartavya Mahesh Suryawanshi",
+  "license_text": "MIT License\n\nCopyright (c) 2025 Kartavya Mahesh Suryawanshi\n\nPermission is hereby granted, free of charge, to any person obtaining a copy\nof this software and associated documentation files (the \"Software\"), to deal\nin the Software without restriction, including without limitation the rights\nto use, copy, modify, merge, publish, distribute, sublicense, and/or sell\ncopies of the Software, and to permit persons to whom the Software is\nfurnished to do so, subject to the following conditions:\n\nThe above copyright notice and this permission notice shall be included in all\ncopies or substantial portions of the Software.\n\nTHE SOFTWARE IS PROVIDED \"AS IS\", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR\nIMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,\nFITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE\nAUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER\nLIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,\nOUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE\nSOFTWARE.\n",
+  "imported_problems": 381,
+  "original_problems": 8,
+  "total_problems": 389,
+  "topics": 16,
+  "subtopics": 53,
+  "notes": "381 community solutions aligned with Striver A2Z, plus 8 original teaching references for heaps and greedy algorithms. Not affiliated with takeUforward. This snapshot is not a complete copy of the 455-question sheet. Difficulty labels are inferred from source folders, not official ratings. Community implementations are not independently verified. Missing statements, editorials, and complexity are explicitly identified. Hint prompts, taxonomy, and the Two Sum teaching note are original additions."
+}

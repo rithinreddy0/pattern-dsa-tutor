@@ -1,0 +1,38 @@
+# All-Render launch: use the already-created database in this workspace.
+# The original render.yaml remains the Render + Neon backend configuration.
+services:
+  - type: web
+    name: pattern-dsa
+    runtime: python
+    region: singapore
+    plan: free
+    buildCommand: pip install -r backend/requirements.lock && cd frontend && npm ci && npm run build
+    startCommand: cd backend && python -m app.index && uvicorn app.main:app --host 0.0.0.0 --port $PORT
+    healthCheckPath: /api/health
+    autoDeployTrigger: commit
+    envVars:
+      - key: PYTHON_VERSION
+        value: 3.11.11
+      - key: NODE_VERSION
+        value: 22.16.0
+      - key: ENVIRONMENT
+        value: production
+      - key: JWT_SECRET
+        generateValue: true
+      - key: DATABASE_URL
+        fromDatabase:
+          name: pattern-dsa-db
+          property: connectionString
+      - key: GEMINI_API_KEY
+        sync: false
+      - key: CORS_ORIGINS
+        fromService:
+          type: web
+          name: pattern-dsa
+          envVarKey: RENDER_EXTERNAL_URL
+      - key: GEMINI_MODEL
+        value: gemini-2.5-flash
+      - key: EMBEDDING_MODEL
+        value: gemini-embedding-001
+      - key: AUTO_SEED
+        value: true

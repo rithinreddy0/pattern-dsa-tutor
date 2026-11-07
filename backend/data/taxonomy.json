@@ -1,0 +1,135 @@
+[
+  {
+    "name": "Foundations",
+    "subtopics": [
+      "Language basics",
+      "Patterns",
+      "Mathematics",
+      "Complexity"
+    ]
+  },
+  {
+    "name": "Arrays",
+    "subtopics": [
+      "Sorting",
+      "Fundamentals",
+      "Subarrays & hashing",
+      "Matrices"
+    ]
+  },
+  {
+    "name": "Binary Search",
+    "subtopics": [
+      "One-dimensional search",
+      "Search on answers",
+      "Two-dimensional search"
+    ]
+  },
+  {
+    "name": "Strings",
+    "subtopics": [
+      "Fundamentals",
+      "String matching",
+      "Advanced strings"
+    ]
+  },
+  {
+    "name": "Linked Lists",
+    "subtopics": [
+      "Singly linked lists",
+      "Doubly linked lists",
+      "Fast & slow pointers",
+      "Advanced linked lists"
+    ]
+  },
+  {
+    "name": "Recursion & Backtracking",
+    "subtopics": [
+      "Recursion basics",
+      "Subsequences",
+      "Backtracking"
+    ]
+  },
+  {
+    "name": "Bit Manipulation",
+    "subtopics": [
+      "Bit fundamentals",
+      "Bit problems"
+    ]
+  },
+  {
+    "name": "Stacks & Queues",
+    "subtopics": [
+      "Implementation",
+      "Expression conversion",
+      "Monotonic stack",
+      "Advanced stacks & queues"
+    ]
+  },
+  {
+    "name": "Sliding Window",
+    "subtopics": [
+      "Fixed & variable windows",
+      "Two pointers"
+    ]
+  },
+  {
+    "name": "Heaps",
+    "subtopics": [
+      "Heap fundamentals",
+      "Priority queue problems"
+    ]
+  },
+  {
+    "name": "Greedy",
+    "subtopics": [
+      "Greedy basics",
+      "Scheduling & intervals"
+    ]
+  },
+  {
+    "name": "Binary Trees",
+    "subtopics": [
+      "Traversals",
+      "Views & paths",
+      "Tree construction",
+      "Advanced trees"
+    ]
+  },
+  {
+    "name": "Binary Search Trees",
+    "subtopics": [
+      "BST fundamentals",
+      "BST problems"
+    ]
+  },
+  {
+    "name": "Graphs",
+    "subtopics": [
+      "Traversal",
+      "Cycles & topology",
+      "Shortest paths",
+      "Spanning trees & DSU",
+      "Bridges & components"
+    ]
+  },
+  {
+    "name": "Dynamic Programming",
+    "subtopics": [
+      "Introduction & 1D",
+      "Grids",
+      "Subsequences",
+      "Strings",
+      "Stocks",
+      "LIS",
+      "Partition & squares"
+    ]
+  },
+  {
+    "name": "Tries",
+    "subtopics": [
+      "Trie fundamentals",
+      "Trie & XOR problems"
+    ]
+  }
+]
