@@ -66,6 +66,16 @@ class ProgressRequest(BaseModel):
     status: Literal['not_started', 'in_progress', 'solved']
 
 
+class PreviewHistoryEntry(BaseModel):
+    role: Literal['user', 'assistant']
+    content: str = Field(max_length=1500)
+    mode: Literal['hint', 'explanation', 'solution'] = 'hint'
+
+
+class PreviewChatRequest(ChatRequest):
+    history: list[PreviewHistoryEntry] = Field(default_factory=list, max_length=6)
+
+
 def public_user(user):
     return {'id': user.id, 'name': user.name, 'email': user.email}
 
@@ -166,9 +176,9 @@ def owned_conversation(db, conversation_id, user):
 
 
 @app.post('/api/chat/preview')
-def preview_chat(data: ChatRequest, request: Request, db: Session = Depends(get_db)):
+def preview_chat(data: PreviewChatRequest, request: Request, db: Session = Depends(get_db)):
     rate_limit(f'preview:{request.client.host}', 8)
-    return answer(db, data.question, data.mode, data.problem_id)
+    return answer(db, data.question, data.mode, data.problem_id, data.history)
 
 
 @app.post('/api/chat')

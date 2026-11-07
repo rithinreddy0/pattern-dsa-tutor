@@ -84,6 +84,7 @@ function Markdown({ children }: { children: string }) {
   );
 }
 function App() {
+  const activeChat = useRef(0);
   const [theme, setTheme] = useState<"light" | "dark">(() => {
     const saved = localStorage.getItem("pattern-theme");
     return saved === "light" || saved === "dark" ? saved : "dark";
@@ -305,6 +306,8 @@ function App() {
     }
   }
   function tutorFor(p: Problem) {
+    activeChat.current += 1;
+    setSending(false);
     setChatProblem(p);
     setConversation(null);
     setMessages([]);
@@ -314,6 +317,7 @@ function App() {
   }
   async function send(text = question) {
     if (!text.trim() || sending) return;
+    const requestVersion = ++activeChat.current;
     const prior = messages;
     setChatError("");
     setMessages([...prior, { role: "user", content: text, mode }]);
@@ -333,8 +337,18 @@ function App() {
           mode,
           problem_id: chatProblem?.id,
           conversation_id: conversation,
+          history: user
+            ? undefined
+            : prior
+                .slice(-6)
+                .map((m) => ({
+                  role: m.role,
+                  content: m.content.slice(0, 1500),
+                  mode: m.mode,
+                })),
         }),
       });
+      if (requestVersion !== activeChat.current) return;
       setMessages([
         ...prior,
         { role: "user", content: text, mode },
@@ -342,11 +356,12 @@ function App() {
       ]);
       if (response.conversation_id) setConversation(response.conversation_id);
     } catch (e) {
+      if (requestVersion !== activeChat.current) return;
       setMessages(prior);
       setQuestion(text);
       setChatError((e as Error).message);
     } finally {
-      setSending(false);
+      if (requestVersion === activeChat.current) setSending(false);
     }
   }
   async function loadChat(c: Conversation) {
@@ -381,6 +396,8 @@ function App() {
     }
   }
   const freshChat = () => {
+    activeChat.current += 1;
+    setSending(false);
     setConversation(null);
     setMessages([]);
     setChatProblem(null);
@@ -523,6 +540,8 @@ function App() {
                 aria-label="Sign out"
                 onClick={() => {
                   sessionStorage.removeItem("pattern-token");
+                  activeChat.current += 1;
+                  setSending(false);
                   setUser(null);
                   setMessages([]);
                   setConversation(null);
