@@ -43,6 +43,17 @@ def embed(contents: list[str], task='RETRIEVAL_DOCUMENT'):
 
 def retrieve(db, query, mode='hint', problem_id=None, limit=5):
     settings = get_settings()
+    if not problem_id:
+        # An explicitly named problem is stronger evidence than a broad term such
+        # as "sum". Prefer the most specific unambiguous title, while leaving
+        # multi-problem comparisons unconstrained.
+        phrase = ' '.join(re.findall(r'[a-z0-9]+', query.lower()))
+        titles = [(pid, ' '.join(re.findall(r'[a-z0-9]+', title.lower()))) for pid, title in db.execute(select(Problem.id, Problem.title)).all()]
+        matches = [(pid, title) for pid, title in titles if len(title.split()) >= 2 and len(title) >= 6 and f' {title} ' in f' {phrase} ']
+        if matches:
+            selected = max(matches, key=lambda item: len(item[1]))
+            if all(f' {title} ' in f' {selected[1]} ' for _, title in matches):
+                problem_id = selected[0]
     kinds = ['hint'] if mode == 'hint' else ['hint', 'explanation'] if mode == 'explanation' else ['explanation', 'solution']
     if settings.gemini_api_key and db.bind.dialect.name == 'postgresql':
         vector = embed([query], 'RETRIEVAL_QUERY')[0]
