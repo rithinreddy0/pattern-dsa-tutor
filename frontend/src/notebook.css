@@ -1,4 +1,4 @@
-@import url("https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;450;500;600&family=IBM+Plex+Sans:wght@400;450;500;550;600;650;700&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Geist:wght@100..900&family=Geist+Mono:wght@100..900&display=swap");
 
 :root {
   --paper: #ffffff;
@@ -14,17 +14,17 @@
   --purple: var(--accent);
   --border: var(--line);
   color-scheme: light;
-  font-family: "IBM Plex Sans", sans-serif;
+  font-family: "Geist", sans-serif;
   color: var(--ink);
   background: var(--paper);
 }
 :root[data-theme="dark"] {
-  --paper: #212121;
-  --surface: #2f2f2f;
-  --surface-alt: #303030;
-  --ink: #ececec;
-  --muted: #b4b4b4;
-  --line: #424242;
+  --paper: #080808;
+  --surface: #151515;
+  --surface-alt: #171717;
+  --ink: #f2f2f2;
+  --muted: #a3a3a3;
+  --line: #2c2c2c;
   --accent: #ececec;
   --accent-soft: #383838;
   --rust: #b4b4b4;
@@ -47,7 +47,7 @@ h3,
 .brand,
 .stat-card strong,
 .big-solved {
-  font-family: "IBM Plex Sans", sans-serif;
+  font-family: "Geist", sans-serif;
 }
 button:focus-visible,
 a:focus-visible {
@@ -85,7 +85,7 @@ select:focus {
   color: var(--rust);
 }
 .workspace-label {
-  font-family: "IBM Plex Mono", monospace;
+  font-family: "Geist Mono", monospace;
   font-size: 9px;
   font-weight: 400;
   letter-spacing: 1px;
@@ -112,7 +112,7 @@ select:focus {
 }
 .nav-count {
   border: none;
-  font-family: "IBM Plex Mono", monospace;
+  font-family: "Geist Mono", monospace;
   color: var(--accent);
   font-size: 10px;
 }
@@ -164,7 +164,7 @@ select:focus {
 .avatar {
   background: var(--surface-alt);
   color: var(--accent);
-  font-family: "IBM Plex Mono", monospace;
+  font-family: "Geist Mono", monospace;
   border: 1px solid var(--line);
 }
 .topbar {
@@ -203,7 +203,7 @@ select:focus {
 }
 .top-search kbd {
   font:
-    9px "IBM Plex Mono",
+    9px "Geist Mono",
     monospace;
   background: transparent;
   border-color: var(--line);
@@ -231,7 +231,7 @@ select:focus {
 }
 .welcome-line,
 .eyebrow {
-  font-family: "IBM Plex Mono", monospace;
+  font-family: "Geist Mono", monospace;
   color: var(--muted);
   font-size: 10px;
   font-weight: 400;
@@ -298,7 +298,7 @@ select:focus {
   align-items: center;
   justify-content: space-between;
   font:
-    9px "IBM Plex Mono",
+    9px "Geist Mono",
     monospace;
   color: var(--muted);
   letter-spacing: 0.4px;
@@ -315,7 +315,7 @@ select:focus {
 }
 .trace-title code {
   font:
-    11px "IBM Plex Mono",
+    11px "Geist Mono",
     monospace;
   color: var(--muted);
 }
@@ -331,7 +331,7 @@ select:focus {
   padding: 10px 0;
   text-align: center;
   font:
-    18px "IBM Plex Mono",
+    18px "Geist Mono",
     monospace;
   color: var(--ink);
 }
@@ -349,7 +349,7 @@ select:focus {
 }
 .algorithm-trace .trace-note {
   font:
-    11px/1.7 "IBM Plex Mono",
+    11px/1.7 "Geist Mono",
     monospace;
   color: var(--muted);
   min-height: 57px;
@@ -366,7 +366,7 @@ select:focus {
 .trace-actions > span {
   margin-right: auto;
   font:
-    9px "IBM Plex Mono",
+    9px "Geist Mono",
     monospace;
   color: var(--muted);
 }
@@ -410,20 +410,20 @@ select:focus {
 }
 .stat-card strong {
   font:
-    27px "IBM Plex Mono",
+    27px "Geist Mono",
     monospace;
   color: var(--ink);
 }
 .stat-card small {
   font:
-    12px "IBM Plex Sans",
+    12px "Geist",
     sans-serif;
   color: var(--muted);
   margin-top: 5px;
 }
 .stat-extra {
   font:
-    9px "IBM Plex Mono",
+    9px "Geist Mono",
     monospace;
   color: var(--muted);
   margin-top: 5px;
@@ -493,7 +493,7 @@ select:focus {
 .topic-2 .topic-caption,
 .topic-13 .topic-caption {
   font:
-    10px "IBM Plex Mono",
+    10px "Geist Mono",
     monospace;
   color: var(--rust);
   letter-spacing: 0;
@@ -556,7 +556,7 @@ select:focus {
   background: var(--paper);
   color: var(--muted);
   font:
-    9px "IBM Plex Mono",
+    9px "Geist Mono",
     monospace;
   border-bottom-color: var(--line);
   height: 40px;
@@ -582,7 +582,7 @@ select:focus {
 }
 .problem-number {
   font:
-    10px "IBM Plex Mono",
+    10px "Geist Mono",
     monospace;
   color: var(--muted);
 }
@@ -684,7 +684,7 @@ select {
 .topic-chips > button > span {
   color: var(--muted);
   font:
-    9px "IBM Plex Mono",
+    9px "Geist Mono",
     monospace;
 }
 .topic-chips > button.chosen {
@@ -732,7 +732,7 @@ select {
 }
 .progress-summary strong {
   color: var(--ink);
-  font-family: "IBM Plex Mono", monospace;
+  font-family: "Geist Mono", monospace;
 }
 .progress-summary span {
   font-size: 11px;
@@ -790,7 +790,7 @@ select {
   color: var(--muted);
   border-color: var(--line);
   font:
-    8px "IBM Plex Mono",
+    8px "Geist Mono",
     monospace;
   border-radius: 2px;
 }
@@ -922,7 +922,7 @@ select {
   color: var(--accent);
   background: var(--surface-alt);
   border-radius: 3px;
-  font-family: "IBM Plex Mono", monospace;
+  font-family: "Geist Mono", monospace;
 }
 .message-avatar.ai {
   color: var(--accent);
@@ -962,12 +962,12 @@ select {
 }
 .markdown pre code {
   color: var(--ink);
-  font-family: "IBM Plex Mono", monospace;
+  font-family: "Geist Mono", monospace;
 }
 .markdown :not(pre) > code {
   background: var(--surface-alt);
   font:
-    12px "IBM Plex Mono",
+    12px "Geist Mono",
     monospace;
   border-radius: 2px;
 }
@@ -976,7 +976,7 @@ select {
 }
 .citations > span {
   font:
-    9px "IBM Plex Mono",
+    9px "Geist Mono",
     monospace;
   color: var(--muted);
 }
@@ -1076,7 +1076,7 @@ select {
 .code-toolbar {
   color: var(--muted);
   font:
-    10px "IBM Plex Mono",
+    10px "Geist Mono",
     monospace;
 }
 .code-toolbar button {
@@ -1095,7 +1095,7 @@ select {
 .complexity strong {
   color: var(--muted);
   font:
-    9px "IBM Plex Mono",
+    9px "Geist Mono",
     monospace;
 }
 .auth-logo {
@@ -1141,17 +1141,17 @@ select {
 }
 .source-stats strong {
   color: var(--ink);
-  font-family: "IBM Plex Mono", monospace;
+  font-family: "Geist Mono", monospace;
 }
 .source-stats small {
   color: var(--muted);
   font:
-    11px "IBM Plex Sans",
+    11px "Geist",
     sans-serif;
 }
 .sources-modal .commit-note {
   font:
-    10px "IBM Plex Mono",
+    10px "Geist Mono",
     monospace;
   color: var(--muted);
 }
@@ -1161,7 +1161,7 @@ select {
   border-color: var(--line);
   border-radius: 3px;
   font:
-    10px/1.8 "IBM Plex Mono",
+    10px/1.8 "Geist Mono",
     monospace;
 }
 .toast {
@@ -1177,7 +1177,7 @@ select {
   --sidebar: #f7f7f7;
 }
 :root[data-theme="dark"] {
-  --sidebar: #171717;
+  --sidebar: #000000;
 }
 body {
   background-image: url("/paper-grain.svg");
@@ -1211,7 +1211,7 @@ body {
 .workspace-label {
   margin-top: 37px;
   letter-spacing: 0.5px;
-  font-family: "IBM Plex Sans", sans-serif;
+  font-family: "Geist", sans-serif;
   font-size: 11px;
 }
 .nav-item {

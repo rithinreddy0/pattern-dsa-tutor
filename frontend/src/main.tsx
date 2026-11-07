@@ -86,11 +86,7 @@ function Markdown({ children }: { children: string }) {
 function App() {
   const [theme, setTheme] = useState<"light" | "dark">(() => {
     const saved = localStorage.getItem("pattern-theme");
-    return saved === "light" || saved === "dark"
-      ? saved
-      : window.matchMedia("(prefers-color-scheme: dark)").matches
-        ? "dark"
-        : "light";
+    return saved === "light" || saved === "dark" ? saved : "dark";
   });
   const [view, setView] = useState<View>("tutor"),
     [mobile, setMobile] = useState(false),

@@ -1,5 +1,5 @@
 :root {
-  font-family: "IBM Plex Sans", sans-serif;
+  font-family: "Geist", sans-serif;
   color: var(--ink);
   background: var(--surface-alt);
   font-synthesis: none;
@@ -73,7 +73,7 @@ p {
 h1,
 h2,
 h3 {
-  font-family: "IBM Plex Sans", "IBM Plex Sans", sans-serif;
+  font-family: "Geist", "Geist", sans-serif;
 }
 svg {
   flex-shrink: 0;
@@ -100,7 +100,7 @@ button svg {
   display: flex;
   align-items: center;
   gap: 10px;
-  font-family: "IBM Plex Sans", sans-serif;
+  font-family: "Geist", sans-serif;
   font-size: 29px;
   font-weight: 800;
   letter-spacing: -1.2px;
@@ -523,13 +523,13 @@ button svg {
 }
 .stat-card strong {
   font-size: 22px;
-  font-family: "IBM Plex Sans", sans-serif;
+  font-family: "Geist", sans-serif;
   font-weight: 600;
   line-height: 1;
 }
 .stat-card small {
   display: block;
-  font-family: "IBM Plex Sans", sans-serif;
+  font-family: "Geist", sans-serif;
   font-size: 9px;
   color: var(--muted);
   font-weight: 400;
@@ -995,12 +995,12 @@ select {
   border-radius: 5px;
 }
 .big-solved {
-  font-family: "IBM Plex Sans";
+  font-family: "Geist";
   font-size: 42px;
   color: var(--accent);
 }
 .big-solved small {
-  font-family: "IBM Plex Sans";
+  font-family: "Geist";
   display: block;
   font-size: 9px;
   color: var(--accent);
@@ -1127,7 +1127,7 @@ select {
   margin-top: 9px;
 }
 .beta-tag {
-  font: 7px "IBM Plex Sans";
+  font: 7px "Geist";
   letter-spacing: 0.6px;
   display: inline-block;
   color: var(--accent);

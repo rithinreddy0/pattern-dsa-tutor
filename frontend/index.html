@@ -1,1 +1,26 @@
-<!doctype html><html lang="en"><head><meta charset="UTF-8"/><link rel="icon" type="image/svg+xml" href="/favicon.svg"/><meta name="viewport" content="width=device-width, initial-scale=1.0"/><meta name="theme-color" content="#f7f8fa"/><meta name="description" content="Learn the pattern, not just the answer. A source-grounded DSA tutor with hints, explanations, and a structured practice library."/><title>Pattern — Your DSA learning companion</title></head><body><div id="root"></div><script type="module" src="/src/main.tsx"></script></body></html>
+<!doctype html>
+<html lang="en">
+  <head>
+    <script>
+      try {
+        document.documentElement.dataset.theme =
+          localStorage.getItem("pattern-theme") === "light" ? "light" : "dark";
+      } catch {
+        document.documentElement.dataset.theme = "dark";
+      }
+    </script>
+    <meta charset="UTF-8" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="theme-color" content="#f7f8fa" />
+    <meta
+      name="description"
+      content="Learn the pattern, not just the answer. A source-grounded DSA tutor with hints, explanations, and a structured practice library."
+    />
+    <title>Pattern — Your DSA learning companion</title>
+  </head>
+  <body>
+    <div id="root"></div>
+    <script type="module" src="/src/main.tsx"></script>
+  </body>
+</html>
