@@ -6,8 +6,8 @@ services:
     runtime: python
     region: singapore
     plan: free
-    buildCommand: pip install -r backend/requirements.lock && cd frontend && npm ci && npm run build
-    startCommand: cd backend && python -m app.index && uvicorn app.main:app --host 0.0.0.0 --port $PORT
+    buildCommand: pip install -r backend/requirements.lock
+    startCommand: cd backend && uvicorn app.main:app --host 0.0.0.0 --port $PORT
     healthCheckPath: /api/health
     autoDeployTrigger: commit
     envVars:
@@ -33,6 +33,8 @@ services:
       - key: GEMINI_MODEL
         value: gemini-2.5-flash
       - key: EMBEDDING_MODEL
-        value: gemini-embedding-001
+        value: gemini-embedding-2
       - key: AUTO_SEED
+        value: true
+      - key: AUTO_INDEX
         value: true

@@ -13,8 +13,9 @@ class Settings(BaseSettings):
     gemini_api_key: str = ''
     use_os_keyring: bool = True
     gemini_model: str = 'gemini-2.5-flash'
-    embedding_model: str = 'gemini-embedding-001'
+    embedding_model: str = 'gemini-embedding-2'
     auto_seed: bool = True
+    auto_index: bool = False
     token_expire_minutes: int = 480
 
     @property

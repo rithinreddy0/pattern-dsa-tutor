@@ -16,6 +16,8 @@ from .seed import seed, DATA
 from .rag import answer, retrieve
 from pathlib import Path
 from fastapi.staticfiles import StaticFiles
+import threading
+import logging
 
 
 @asynccontextmanager
@@ -24,7 +26,17 @@ async def lifespan(app):
     if get_settings().auto_seed:
         with SessionLocal() as db:
             seed(db)
+    stop_index = threading.Event()
+    if get_settings().auto_index and get_settings().gemini_api_key:
+        def build_index():
+            try:
+                from .index import main
+                main(stop_index)
+            except Exception as error:
+                logging.getLogger(__name__).warning('Index paused (%s). The tutor remains available with keyword retrieval.', type(error).__name__)
+        threading.Thread(target=build_index, name='curriculum-index', daemon=True).start()
     yield
+    stop_index.set()
 
 
 app = FastAPI(title='Pattern DSA Tutor', version='1.0.0', lifespan=lifespan)
@@ -89,7 +101,8 @@ def health(db: Session = Depends(get_db)):
     db.execute(text('SELECT 1'))
     settings = get_settings()
     indexed = db.scalar(select(func.count()).select_from(Chunk).where(Chunk.embedding_model == settings.embedding_model)) or 0
-    return {'status': 'ok', 'ai': 'gemini' if settings.gemini_api_key else 'local', 'retrieval': 'pgvector' if engine.dialect.name == 'postgresql' and settings.gemini_api_key and indexed else 'lexical', 'indexed_chunks': indexed, 'database': engine.dialect.name}
+    total = db.scalar(select(func.count()).select_from(Chunk)) or 0
+    return {'status': 'ok', 'ai': 'gemini' if settings.gemini_api_key else 'local', 'retrieval': 'pgvector' if engine.dialect.name == 'postgresql' and settings.gemini_api_key and indexed == total and total else 'lexical', 'indexed_chunks': indexed, 'total_chunks': total, 'embedding_model': settings.embedding_model, 'index_ready': bool(total and indexed == total), 'database': engine.dialect.name}
 
 
 @app.post('/api/auth/register', status_code=201)

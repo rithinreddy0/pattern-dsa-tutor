@@ -29,7 +29,15 @@ def embed(contents: list[str], task='RETRIEVAL_DOCUMENT'):
     settings = get_settings()
     if not settings.gemini_api_key:
         raise HTTPException(503, 'Gemini is not configured.')
-    requests = [{'model': f'models/{settings.embedding_model}', 'content': {'parts': [{'text': value[:8000]}]}, 'taskType': task, 'outputDimensionality': 768} for value in contents]
+    requests = []
+    for value in contents:
+        request = {'model': f'models/{settings.embedding_model}', 'outputDimensionality': 768}
+        if settings.embedding_model.startswith('gemini-embedding-2'):
+            value = f'task: search result | query: {value}' if task == 'RETRIEVAL_QUERY' else f'title: {value.splitlines()[0]} | text: {value}'
+        else:
+            request['taskType'] = task
+        request['content'] = {'parts': [{'text': value[:8000]}]}
+        requests.append(request)
     try:
         response = httpx.post(f'{API}/models/{settings.embedding_model}:batchEmbedContents', headers={'x-goog-api-key': settings.gemini_api_key}, json={'requests': requests}, timeout=45)
         response.raise_for_status()
@@ -37,6 +45,10 @@ def embed(contents: list[str], task='RETRIEVAL_DOCUMENT'):
         if len(vectors) != len(contents) or any(len(v) != 768 for v in vectors):
             raise ValueError('Invalid embedding dimensions')
         return [[n / (math.sqrt(sum(x*x for x in v)) or 1) for n in v] for v in vectors]
+    except httpx.HTTPStatusError as error:
+        if error.response.status_code == 429:
+            raise HTTPException(429, 'The embedding API quota is temporarily exhausted.')
+        raise HTTPException(503, 'The embedding service is unavailable. Please try again.')
     except (httpx.HTTPError, KeyError, ValueError):
         raise HTTPException(503, 'The embedding service is unavailable. Please try again.')
 
@@ -56,7 +68,19 @@ def retrieve(db, query, mode='hint', problem_id=None, limit=5):
                 problem_id = selected[0]
     kinds = ['hint'] if mode == 'hint' else ['hint', 'explanation'] if mode == 'explanation' else ['explanation', 'solution']
     if settings.gemini_api_key and db.bind.dialect.name == 'postgresql':
-        vector = embed([query], 'RETRIEVAL_QUERY')[0]
+        from sqlalchemy import func
+        total = db.scalar(select(func.count()).select_from(Chunk)) or 0
+        ready = db.scalar(select(func.count()).select_from(Chunk).where(Chunk.embedding_model == settings.embedding_model, Chunk.embedding.is_not(None))) or 0
+        if ready == total and total:
+            try:
+                vector = embed([query], 'RETRIEVAL_QUERY')[0]
+            except HTTPException:
+                vector = None
+        else:
+            vector = None
+    else:
+        vector = None
+    if vector is not None:
         params = {'vector': json.dumps(vector), 'model': settings.embedding_model, 'limit': limit}
         filters = ' AND problem_id = :pid' if problem_id else ''
         if problem_id:
@@ -66,7 +90,6 @@ def retrieve(db, query, mode='hint', problem_id=None, limit=5):
         rows = db.execute(text(f'SELECT id, 1 - (embedding <=> CAST(:vector AS vector)) AS score FROM chunks WHERE embedding IS NOT NULL AND embedding_model = :model AND kind IN ({kind_sql}){filters} ORDER BY embedding <=> CAST(:vector AS vector) LIMIT :limit'), params).all()
         if rows:
             return [(db.get(Chunk, row.id), float(row.score)) for row in rows], 'pgvector'
-        raise HTTPException(503, 'The knowledge index is not ready. Run the embedding index command before using semantic search.')
     chunks = db.scalars(select(Chunk).where(Chunk.kind.in_(kinds), *([Chunk.problem_id == problem_id] if problem_id else []))).all()
     ranked = sorted(((c, lexical_score(query, c.content)) for c in chunks), key=lambda x: x[1], reverse=True)
     return ranked[:limit], 'lexical'

@@ -199,3 +199,43 @@ def test_gemini_retries_transient_failure(client,problem,monkeypatch):
     response=client.post('/api/chat/preview',json={'question':'A hint for Two Sum','mode':'hint','problem_id':problem['id']})
     assert response.status_code==200 and response.json()['provider']=='gemini'
     assert len(calls)==2
+
+
+def test_index_uses_one_embedding_per_problem_and_resumes(client,monkeypatch):
+    import app.index as indexer
+    from app.config import get_settings
+    from app.models import Problem
+    monkeypatch.setattr(get_settings(),'gemini_api_key','mock-key')
+    monkeypatch.setattr(indexer.time,'sleep',lambda seconds:None)
+    calls=[]
+    def fake_embed(texts):
+        calls.extend(texts)
+        return [[1.0]+[0.0]*767 for _ in texts]
+    monkeypatch.setattr(indexer,'embed',fake_embed)
+    with SessionLocal() as db:
+        problem_count=len(db.scalars(select(Problem)).all())
+    indexer.main()
+    assert len(calls)==problem_count
+    with SessionLocal() as db:
+        chunks=db.scalars(select(Chunk)).all()
+        assert all(c.embedding_model==get_settings().embedding_model and len(c.embedding)==768 for c in chunks)
+        assert len(chunks)>problem_count
+    indexer.main()
+    assert len(calls)==problem_count
+
+
+def test_embedding_failure_does_not_prevent_startup(client,monkeypatch):
+    import app.index as indexer
+    from app.config import get_settings
+    from fastapi import HTTPException
+    import threading
+    ran=threading.Event()
+    def unavailable(stop_event=None):
+        ran.set()
+        raise HTTPException(429,'quota exhausted')
+    monkeypatch.setattr(get_settings(),'auto_index',True)
+    monkeypatch.setattr(get_settings(),'gemini_api_key','mock-key')
+    monkeypatch.setattr(indexer,'main',unavailable)
+    with TestClient(app) as independent:
+        assert ran.wait(2)
+        assert independent.get('/api/health').status_code==200
