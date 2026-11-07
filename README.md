@@ -2,7 +2,7 @@
 
 A working React + FastAPI learning app with a problem library, progressive tutoring, source citations, JWT authentication, saved conversations, bookmarks, and problem progress. Production retrieval uses Gemini embeddings and PostgreSQL/pgvector; development also supports an explicitly labeled keyword-based reference mode.
 
-The interface uses a restrained notebook layout with light and dark themes. Your theme preference is saved locally. A worked Two Sum example is interactive; library and progress counts come from the database.
+The interface opens directly into a restrained black-and-white chat workspace, with a subtle paper texture and light/dark themes. Your theme preference is saved locally. The problem library and progress counts come from the database.
 
 ## What is included
 

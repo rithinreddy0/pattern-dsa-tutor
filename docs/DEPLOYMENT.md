@@ -4,7 +4,7 @@ Target architecture: Vercel (React static frontend), Render (FastAPI service), N
 
 ## 1. Accounts and source
 
-Push the project to your GitHub repository. The setup created [rithinreddy0/pattern-dsa-tutor](https://github.com/rithinreddy0/pattern-dsa-tutor) as a **private** repository. Grant Render and Vercel access to that repository when connecting GitHub. No source code or secret needs to become public for deployment.
+Push the project to your GitHub repository. The setup created [rithinreddy0/pattern-dsa-tutor](https://github.com/rithinreddy0/pattern-dsa-tutor). The owner explicitly approved publishing this new repository so Render can fetch it. Secret keys, local environment files, databases, and logs are excluded from the repository.
 
 Use connected Neon and Vercel integrations when available. Otherwise use their dashboards. Account sign-in, terms, and billing steps may require the account owner. Keep credentials in platform secret storage, not chat or Git.
 
@@ -65,3 +65,7 @@ Record the verified Vercel URL, Render service URL, Neon project ID (not its con
 ## Secret handling
 
 The local Gemini key can live in Windows Credential Manager. Local `.env` files, database files, logs, and dependency directories are ignored. Production credentials belong in Render's environment secrets. Vercel only needs the public API URL. Tests disable local credential-vault discovery and use temporary databases and mock AI responses. Do not commit account credentials, real user records, or a copied production database.
+
+## All-Render deployment
+
+`render-managed.yaml` builds the React frontend and FastAPI backend into one web service and references the already-created `pattern-dsa-db` database privately. Render generates the signing secret and resolves the database URL without copying it to this repository. Only the Gemini key needs to be supplied during the initial Blueprint apply. This deployment uses the Folio Assignment workspace. The free database expires on December 7, 2026.

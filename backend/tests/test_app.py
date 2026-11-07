@@ -157,6 +157,7 @@ def test_gemini_contract_and_hint_evidence(client,problem,monkeypatch):
     monkeypatch.setattr(settings,'gemini_api_key','mock-key')
     captured={}
     class Response:
+        status_code=200
         def raise_for_status(self):pass
         def json(self):return {'candidates':[{'content':{'parts':[{'text':'Look for the complement of each value. [1] [99]'}]}}]}
     def fake_post(url,**kwargs):
@@ -168,3 +169,21 @@ def test_gemini_contract_and_hint_evidence(client,problem,monkeypatch):
     context=captured['json']['contents'][0]['parts'][0]['text']
     assert 'unordered_map' not in context
     assert 'HINT' in captured['json']['systemInstruction']['parts'][0]['text']
+    assert captured['json']['generationConfig']['thinkingConfig']=={'thinkingBudget':0}
+
+
+def test_gemini_retries_transient_failure(client,problem,monkeypatch):
+    import app.rag as rag
+    from app.config import get_settings
+    import httpx
+    monkeypatch.setattr(get_settings(),'gemini_api_key','mock-key')
+    monkeypatch.setattr(rag.time,'sleep',lambda seconds:None)
+    calls=[]
+    def post(url,**kwargs):
+        calls.append(url)
+        status=503 if len(calls)==1 else 200
+        return httpx.Response(status,json={'candidates':[{'content':{'parts':[{'text':'Think about the complement. [1]'}]}}]},request=httpx.Request('POST',url))
+    monkeypatch.setattr(rag.httpx,'post',post)
+    response=client.post('/api/chat/preview',json={'question':'A hint for Two Sum','mode':'hint','problem_id':problem['id']})
+    assert response.status_code==200 and response.json()['provider']=='gemini'
+    assert len(calls)==2

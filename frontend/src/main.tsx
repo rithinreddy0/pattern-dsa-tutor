@@ -17,7 +17,6 @@ import {
   Hash,
   History,
   Layers,
-  LayoutDashboard,
   Lightbulb,
   LoaderCircle,
   LogOut,
@@ -26,7 +25,6 @@ import {
   Moon,
   Network,
   Plus,
-  RotateCcw,
   Search,
   ShieldCheck,
   Sparkles,
@@ -52,36 +50,11 @@ import {
 import "./styles.css";
 import "./notebook.css";
 
-type View =
-  | "overview"
-  | "library"
-  | "tutor"
-  | "bookmarks"
-  | "progress"
-  | "history";
+type View = "library" | "tutor" | "bookmarks" | "progress" | "history";
 const EMPTY: Learning = { bookmarks: [], progress: {} };
-const topicIcons = [
-  Hash,
-  Layers,
-  Search,
-  Code2,
-  GitBranch,
-  Waypoints,
-  Code2,
-  Layers,
-  ArrowRight,
-  Layers,
-  Target,
-  GitBranch,
-  GitBranch,
-  Network,
-  Waypoints,
-  Network,
-];
 const nav = [
-  { id: "overview", label: "Overview", icon: LayoutDashboard },
+  { id: "tutor", label: "New chat", icon: MessageSquare },
   { id: "library", label: "Problem library", icon: BookOpen },
-  { id: "tutor", label: "Tutor", icon: Sparkles },
   { id: "bookmarks", label: "Bookmarks", icon: Bookmark },
   { id: "progress", label: "My progress", icon: ChartNoAxesCombined },
   { id: "history", label: "Chat history", icon: History },
@@ -110,61 +83,6 @@ function Markdown({ children }: { children: string }) {
     </div>
   );
 }
-function AlgorithmTrace() {
-  const [step, setStep] = useState(0);
-  return (
-    <div className="algorithm-trace">
-      <div className="trace-label">
-        <span>WORKED EXAMPLE</span>
-        <span>01 / ARRAYS</span>
-      </div>
-      <div className="trace-title">
-        <strong>Two Sum</strong>
-        <code>target = 9</code>
-      </div>
-      <div className="trace-array">
-        {[2, 7, 11, 15].map((n, i) => (
-          <span
-            key={i}
-            className={
-              (step === 1 && i === 0) || (step === 2 && i < 2)
-                ? "trace-current"
-                : ""
-            }
-          >
-            {n}
-            <small>{i}</small>
-          </span>
-        ))}
-      </div>
-      <p className="trace-note">
-        {step === 0
-          ? "Find two values that add up to 9. Start with the first value."
-          : step === 1
-            ? "At index 0: 9 − 2 = 7. Remember 2, then move to the next value."
-            : "At index 1: 9 − 7 = 2. We have seen 2. The pair is [0, 1]."}
-      </p>
-      <div className="trace-actions">
-        <span>{step}/2 steps</span>
-        <button
-          onClick={() => setStep(0)}
-          disabled={step === 0}
-          aria-label="Reset example"
-        >
-          <RotateCcw size={14} />
-        </button>
-        <button
-          className="trace-step"
-          onClick={() => setStep((s) => Math.min(s + 1, 2))}
-          disabled={step === 2}
-        >
-          {step === 2 ? "Pair found" : "Next step"}
-          {step === 2 ? <Check size={14} /> : <ArrowRight size={14} />}
-        </button>
-      </div>
-    </div>
-  );
-}
 function App() {
   const [theme, setTheme] = useState<"light" | "dark">(() => {
     const saved = localStorage.getItem("pattern-theme");
@@ -174,7 +92,7 @@ function App() {
         ? "dark"
         : "light";
   });
-  const [view, setView] = useState<View>("overview"),
+  const [view, setView] = useState<View>("tutor"),
     [mobile, setMobile] = useState(false),
     [topics, setTopics] = useState<Topic[]>([]),
     [health, setHealth] = useState<Health | null>(null);
@@ -272,8 +190,7 @@ function App() {
     setPage(1);
   }, [topic, subtopic, query, difficulty, semantic, view]);
   useEffect(() => {
-    if (!["overview", "library", "bookmarks", "progress"].includes(view))
-      return;
+    if (!["library", "bookmarks", "progress"].includes(view)) return;
     let active = true;
     setLoading(true);
     setError("");
@@ -302,11 +219,11 @@ function App() {
           } else {
             const params = new URLSearchParams({
               q: query,
-              topic: view === "overview" ? "" : topic,
-              subtopic: view === "overview" ? "" : subtopic,
+              topic: topic,
+              subtopic: subtopic,
               difficulty,
               page: String(page),
-              page_size: view === "overview" ? "6" : "20",
+              page_size: "20",
             });
             const response = await api<{ items: Problem[]; total: number }>(
               `/problems?${params}`,
@@ -565,7 +482,7 @@ function App() {
         <div className="sidebar-scrim" onClick={() => setMobile(false)} />
       )}
       <aside className={`sidebar ${mobile ? "open" : ""}`}>
-        <button className="brand" onClick={() => go("overview")}>
+        <button className="brand" onClick={freshChat}>
           <span className="brand-icon">
             <Code2 size={23} />
           </span>
@@ -573,13 +490,15 @@ function App() {
             pattern<span className="brand-period">.</span>
           </span>
         </button>
-        <div className="workspace-label">STUDY SPACE</div>
+        <div className="workspace-label">WORKSPACE</div>
         <nav>
           {nav.map((n) => (
             <button
               key={n.id}
               className={`nav-item ${view === n.id ? "active" : ""}`}
-              onClick={() => go(n.id as View)}
+              onClick={() =>
+                n.id === "tutor" ? freshChat() : go(n.id as View)
+              }
             >
               <n.icon size={18} />
               <span>{n.label}</span>
@@ -589,16 +508,6 @@ function App() {
             </button>
           ))}
         </nav>
-        <div className="sidebar-note">
-          <strong>Need a hand?</strong>
-          <p>
-            Work through a problem with a hint, an explanation, or a full
-            solution.
-          </p>
-          <button onClick={freshChat}>
-            Ask your tutor <ArrowUpRight size={15} />
-          </button>
-        </div>
         <div className="sidebar-footer">
           <button className="source-link" onClick={() => setSources(true)}>
             <ShieldCheck size={16} /> Sources & credits{" "}
@@ -650,7 +559,7 @@ function App() {
             >
               <Menu size={22} />
             </button>
-            <span>Workspace</span>
+            <span>Pattern</span>
             <ChevronRight size={14} />
             <strong>{nav.find((n) => n.id === view)?.label}</strong>
           </div>
@@ -696,180 +605,6 @@ function App() {
           </div>
         </header>
         <main className={`main-content ${view === "tutor" ? "chat-main" : ""}`}>
-          {view === "overview" && (
-            <>
-              <div className="welcome-line">YOUR PRACTICE DESK</div>
-              <section className="hero">
-                <div>
-                  <h1>
-                    A place to work
-                    <br />
-                    <span>through DSA.</span>
-                  </h1>
-                  <p>
-                    Pick a problem, try an approach, and ask for help when you
-                    need it. Keep your notes and progress in one place.
-                  </p>
-                  <button className="primary-button" onClick={freshChat}>
-                    Ask the tutor <ArrowUpRight size={17} />
-                  </button>
-                </div>
-                <AlgorithmTrace />
-              </section>
-              <section className="stats-grid">
-                <div className="stat-card">
-                  <span className="stat-icon violet">
-                    <BookOpen size={19} />
-                  </span>
-                  <div>
-                    <strong>
-                      {allCount || "—"}
-                      <small>problems</small>
-                    </strong>
-                  </div>
-                  <span className="stat-extra">A2Z inspired</span>
-                </div>
-                <div className="stat-card">
-                  <span className="stat-icon peach">
-                    <Network size={20} />
-                  </span>
-                  <div>
-                    <strong>
-                      {topics.length || "—"}
-                      <small>topics</small>
-                    </strong>
-                  </div>
-                  <span className="stat-extra">
-                    {topics.reduce((a, t) => a + t.subtopics.length, 0) || "—"}{" "}
-                    subtopics
-                  </span>
-                </div>
-                <div className="stat-card">
-                  <span className="stat-icon green">
-                    <CheckCheck size={20} />
-                  </span>
-                  <div>
-                    <strong>
-                      {solved}
-                      <small>problems solved</small>
-                    </strong>
-                  </div>
-                  <button
-                    className="stat-action"
-                    onClick={() => go("progress")}
-                  >
-                    <ArrowUpRight size={18} />
-                  </button>
-                </div>
-              </section>
-              <section className="start-section">
-                <div className="section-title">
-                  <div>
-                    <h2>Browse by topic</h2>
-                    <p>Start with a topic you want to practise.</p>
-                  </div>
-                  <button
-                    className="text-button"
-                    onClick={() => {
-                      setTopic("");
-                      setQuery("");
-                      go("library");
-                    }}
-                  >
-                    Explore all topics <ArrowRight size={15} />
-                  </button>
-                </div>
-                <div className="topic-cards">
-                  {[1, 2, 13].map((index) => {
-                    const t = topics[index],
-                      Icon = topicIcons[index];
-                    return (
-                      <button
-                        key={index}
-                        className={`topic-card topic-${index}`}
-                        onClick={() => t && browseTopic(t.name)}
-                      >
-                        <div className="topic-card-top">
-                          <span className="topic-card-icon">
-                            <Icon size={22} />
-                          </span>
-                          <ArrowUpRight size={18} />
-                        </div>
-                        <span className="topic-caption">
-                          {index === 1 ? "01" : index === 2 ? "02" : "03"}
-                        </span>
-                        <h3>
-                          {t?.name ||
-                            ["Arrays", "Binary Search", "Graphs"][
-                              [1, 2, 13].indexOf(index)
-                            ]}
-                        </h3>
-                        <p>
-                          {index === 1
-                            ? "Sorting, subarrays, hashing, and matrices."
-                            : index === 2
-                              ? "Search a sorted space and reason about boundaries."
-                              : "Traversals, shortest paths, and connected components."}
-                        </p>
-                        <div className="topic-card-bottom">
-                          <span>{t?.count ?? "—"} problems</span>
-                          <span>
-                            {"Browse"} <ArrowRight size={13} />
-                          </span>
-                        </div>
-                      </button>
-                    );
-                  })}
-                </div>
-              </section>
-              <section className="ask-strip">
-                <span className="ask-icon">
-                  <Sparkles size={22} />
-                </span>
-                <div>
-                  <h3>Choose how much help you want.</h3>
-                  <p>
-                    Hint keeps the answer hidden. Explanation walks through the
-                    idea. Solution shows the code.
-                  </p>
-                </div>
-                <button onClick={freshChat}>
-                  Open tutor <ArrowRight size={16} />
-                </button>
-              </section>
-              <section className="recent-section">
-                <div className="section-title">
-                  <div>
-                    <h2>From the problem library</h2>
-                    <p>Open a problem to read, save, or work through it.</p>
-                  </div>
-                  <button
-                    className="text-button"
-                    onClick={() => {
-                      setTopic("");
-                      setQuery("");
-                      go("library");
-                    }}
-                  >
-                    View problem library <ArrowRight size={15} />
-                  </button>
-                </div>
-                {loading ? (
-                  <Loading />
-                ) : error ? (
-                  <ErrorBox text={error} />
-                ) : (
-                  <ProblemRows />
-                )}
-              </section>
-              <footer className="page-footer">
-                <span>Pattern · DSA practice</span>
-                <button onClick={() => setSources(true)}>
-                  Sources & attribution <ExternalLink size={12} />
-                </button>
-              </footer>
-            </>
-          )}
           {["library", "bookmarks", "progress"].includes(view) && (
             <>
               <div className="page-heading">
@@ -1128,7 +863,7 @@ function App() {
                     <div className="chat-orbit">
                       <Sparkles size={32} />
                     </div>
-                    <h1>What are you working on?</h1>
+                    <h1>What would you like to work on?</h1>
                     <p>
                       Ask a DSA question or open a problem from the library.
                       <br />
