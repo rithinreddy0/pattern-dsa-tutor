@@ -1,4 +1,4 @@
-# Pattern — AI-powered DSA tutor
+# Pattern â€” AI-powered DSA tutor
 
 A working React + FastAPI learning app with a problem library, progressive tutoring, source citations, JWT authentication, saved conversations, bookmarks, and problem progress. Production retrieval uses Gemini embeddings and PostgreSQL/pgvector; development also supports an explicitly labeled keyword-based reference mode.
 
@@ -125,4 +125,4 @@ Prompt-injection checks and mode-specific evidence reduce risk; they are not a p
 
 The API starts immediately. `AUTO_INDEX=true` builds the semantic index in the background. One problem embedding is shared by its Hint, Explanation, and Solution passages, reducing initial API use from 1,168 to 389 vectors. Embedding 2 query/document prefixes are used, and vectors from different models are never compared. Until indexing completes, or if query embedding quota is exhausted, retrieval explicitly reports `lexical`; the tutor remains usable with source-grounded Gemini responses. `/api/health` exposes the current index state.
 
-The Vercel production API URL is saved as a public configuration value. Gemini and signing keys stay on the backend. Both projects are connected to this GitHub repository. The free database expires on December 7, 2026.
+Vercel proxies `/api/*` to the Render API, so browser requests use the same origin. Gemini and signing keys stay on the backend. Both projects are connected to this GitHub repository. The free database expires on December 7, 2026.
